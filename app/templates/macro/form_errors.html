@@ -1,0 +1,11 @@
+{% macro print_error(form,name="") %}
+    {% if form.errors %}
+        {% for filedname, errors in form.errors.items() %}
+            {% if filedname == name %}
+                {% for error in errors %}
+                    <div class="invalid-feedback" style="display: block;">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endmacro %}

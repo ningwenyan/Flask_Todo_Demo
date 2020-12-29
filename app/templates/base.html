@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>
         {% block title %}
         
@@ -11,6 +12,7 @@
     {# 加载favicon.ico #}
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
     {# 加载bootstrap文件 css: slate 4.5.2; js: 3.5.1 包含全部,不是slim,包含AJAX; popper: 1.16.0: bootstrap js: 4.5.0 #}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
     <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>

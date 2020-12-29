@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    csrf错误
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <script type="text/javascript" src="{{ url_for('static', filename='js/404/data.js') }}"></script>
+                <script type="text/javascript" src="{{ url_for('static', filename='js/404/bodymovin.js') }}"></script>
+                <div id="svgContainer"></div>
+                <script type="text/javascript">
+                    var svgContainer = document.getElementById('svgContainer');
+                    var animItem = bodymovin.loadAnimation({
+                      wrapper: svgContainer,
+                      animType: 'svg',
+                      loop: true,
+                      animationData: JSON.parse(animationData)
+                    });
+                </script>
+                <p>{{ reason }}</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

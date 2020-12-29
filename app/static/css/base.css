@@ -1,0 +1,13 @@
+/*使用伪类*/
+.clearfix:after, .clearfix:before{
+    content:"";
+    display:table;
+}
+
+.clearfix:after{
+    clear:both;
+}
+/*清除ie浮动*/
+.clearfix{
+    zoom:1
+}
