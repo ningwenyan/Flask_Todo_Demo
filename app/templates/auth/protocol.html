@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    注册协议
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row clearfix">
+            <div class="col-md-3 column">
+            </div>
+            <div class="col-md-6 column">
+                <div class="card text-white bg-danger mb-3" style="max-width: 65rem;">
+                    <div class="card-header">免费注册</div>
+                        <div class="card-body">
+                            <h4 class="card-title">声明</h4>
+                            <p class="card-text">
+                                一、不得利用本站危害国家安全、泄露国家秘密，不得侵犯国家社会集体的和公民的合法权益，不得利用本站制作、复制和传播下列信息：
+                            </p>
+                            <p class="card-text">（一）煽动抗拒、破坏宪法和法律、行政法规实施的；</p>
+                            <p class="card-text">（二）煽动颠覆国家政权，推翻社会主义制度的；</p>
+                            <p class="card-text">（三）煽动分裂国家、破坏国家统一的；</p>
+                            <p class="card-text">（四）煽动民族仇恨、民族歧视，破坏民族团结的；</p>
+                            <p class="card-text">（五）捏造或者歪曲事实，散布谣言，扰乱社会秩序的；</p>
+                            <p class="card-text">（六）宣扬封建迷信、淫秽、色情、赌博、暴力、凶杀、恐怖、教唆犯罪的；</p>
+                            <p class="card-text">（七）公然侮辱他人或者捏造事实诽谤他人的，或者进行其他恶意攻击的；</p>
+                            <p class="card-text">（八）损害国家机关信誉的;</p>
+                            <p class="card-text">（九）其他违反宪法和法律行政法规的；</p>
+                            <p class="card-text">（十）进行商业广告行为的. </p>
+                            <p><a type="button" class="btn btn-success" href="{{ url_for('auth.auth_register') }}">返回注册</a></p>
+                        </div>
+                </div>
+            <div class="col-md-3 column">
+            </div>
+        </div>
+    </div>
+{% endblock %}

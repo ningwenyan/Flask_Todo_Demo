@@ -46,6 +46,16 @@ def CMS_user_update_password(id, password):
     else:
         print("账户不存在")
 
+# 删除用户
+@manager.option('-e', '--email', dest='email')
+def CMS_user_delete(email):
+    user = User.query.filter_by(email=email).first()
+    if user is not None:
+        user.delete()
+        print("用户已删除")
+    else:
+        print('用户不存在')
+
 
 if __name__  == '__main__':
     manager.run()

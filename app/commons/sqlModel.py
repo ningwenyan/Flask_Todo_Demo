@@ -9,6 +9,8 @@ import re
 from sqlalchemy.ext.declarative import synonym_for
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import synonym
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from flask import current_app
 
 
 class BaseModel:
@@ -24,7 +26,7 @@ class BaseModel:
 
     def delete(self):
         # 删除数据
-        db.session.deleter(self)
+        db.session.delete(self)
         self.__commit()
 
     def save(self):
@@ -87,6 +89,8 @@ class User(db.Model, BaseModel, UserMixin):
             raise ValueError('{} 不是有效的用户名,不允许超过24位字符'.format(raw_username))
         self._username = raw_username
 
+    username = synonym("_username", descriptor=username)
+
     # -- email 正则匹配
     @property
     def email(self):
@@ -136,6 +140,29 @@ class User(db.Model, BaseModel, UserMixin):
 
     def __repr__(self):
         return "<User %r>" % self.username
+
+    # -- 创建邮箱token
+    # 生成token,使用itsdangerous序列化token,确定唯一用户,并设置超时时间
+    def generate_confirmation_token(self, expiration=3600):
+        s = Serializer(current_app._get_current_object().config['SECRET_KEY'], expires_in=expiration)
+        return s.dumps({'confirm':self.id}).decode('utf-8')
+
+    # 接受序列化信息并检测
+    def check_confirmation_token(self, token):
+        s = Serializer(current_app._get_current_object().config['SECRET_KEY'])
+        try:
+            data = s.loads(token.encode('utf-8'))
+        except:
+            return False
+        if data.get('confirm') != self.id:
+            # 检测唯一id
+            return False
+        # 所有检测通过,证明唯一用户,设置标志位
+        self.confirmed = True
+        # 没有执行db.session.commit(), 因为用户这里并不能确定用户点击了激活的超链接
+        # 这将会在 views.py 中定义
+        db.session.add(self)
+        return True
 
 
 @login_manager.user_loader

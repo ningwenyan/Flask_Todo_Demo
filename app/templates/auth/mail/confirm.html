@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>激活</title>
+</head>
+<body>
+    <p>您好,{{ user.username }}</p>
+    <p>感谢您的注册,点击<a href="{{ url_for('auth.auth_confirm', token=token, _external=True) }}">激活</a>按钮激活你的账户.</p>
+    <p>您也可以双击以下连接激活账户:</p>
+    <p>{{ url_for('auth.auth_confirm', token=token, _external=True) }}</p>
+    <p>如果已激活,请忽略此邮件.</p>
+</body>
+</html>

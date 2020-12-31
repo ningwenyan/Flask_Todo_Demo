@@ -23,3 +23,13 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 # CSRF保护
 SECRET_KEY = os.urandom(10)
+
+# 配置Flask Mail
+# 设置邮箱
+MAIL_SERVER = 'smtp.qq.com'
+MAIL_PORT = 465
+MAIL_USERNAME = '@qq.com'
+MAIL_PASSWORD = "imkzuyoomffddijc"
+MAIL_USE_SSL = True
+MAIL_USE_TLS = False
+MAIL_DEFAULT_SENDER = '@qq.com'
