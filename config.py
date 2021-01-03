@@ -28,8 +28,8 @@ SECRET_KEY = os.urandom(10)
 # 设置邮箱
 MAIL_SERVER = 'smtp.qq.com'
 MAIL_PORT = 465
-MAIL_USERNAME = '@qq.com'
-MAIL_PASSWORD = "imkzuyoomffddijc"
+MAIL_USERNAME = '2@qq.com'
+MAIL_PASSWORD = "imkzuyoo"
 MAIL_USE_SSL = True
 MAIL_USE_TLS = False
-MAIL_DEFAULT_SENDER = '@qq.com'
+MAIL_DEFAULT_SENDER = '2@qq.com'

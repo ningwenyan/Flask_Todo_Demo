@@ -7,6 +7,10 @@
     注册
 {% endblock %}
 
+{% block js %}
+    <script src="{{ url_for('static', filename="js/base.js") }}"></script>
+{% endblock %}
+
 {% block content %}
     <div class="container">
         <div class="row clearfix">
@@ -32,8 +36,8 @@
                             {{ print_error(form, name="password2") }}
                             <label for="Code">验证码</label>
                             <div class="clearfix">
-                                <input type="text" class="form-control" name="code" placeholder="验证码" style="width: 70%; float:left">
-                                <img src="" alt="code" style="float: right; width: 27%">
+                                <input type="text" class="form-control" name="code" placeholder="验证码" style="width: 62%; float:left">
+                                <img src="{{ url_for('commons.graph_captcha') }}" alt="code" style="float: right; width: 35%; margin: 4px auto;" id="ver_code">
                             </div>
                             {{ print_error(form, name="code") }}
                         </div>
