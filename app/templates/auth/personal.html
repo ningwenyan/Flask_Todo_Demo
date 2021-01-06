@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    冷冷信息页面
+{% endblock %}
+
+{% block js %}
+    <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/csrfAjax.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/moment/moment-with-locales.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/moment/moment-timezone.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+        <div class="container">
+        <div class="row clearfix">
+            <div class="col-md-1 column">
+
+            </div>
+            <div class="col-md-2 column">
+                <div class="row">
+                    <nav class="nav flex-column">
+                        <a class="nav-link active smooth" href="#个人资料">个人资料</a>
+                    </nav>
+                </div>
+            </div>
+            <div class="col-md-1 column">
+
+            </div>
+            <div class="col-md-8 column">
+                <h4 class="text-gray"><i class="linecons-tag" style="margin-right:7px" id="个人资料"></i>个人资料</h4>
+                <input type="text" style="display: none;" data-user-id="{{ current_user.id }}" id="showID">
+                <table class="table table-hover">
+                    <thead>
+                    </thead>
+                    <tbody>
+                        <tr class="table-active">
+                            <td>用户名:</td>
+                            <td>
+                                <span id="personalUsername"></span><span>&nbsp;&nbsp;<a  class="text-success" href="#">重命名</a></span>
+                            </td>
+                        </tr>
+                        <tr class="table-primary">
+                            <td>用户头像:</td>
+                            <td>
+                                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12" id="picture_view">
+                                    <div class="hovereffect">
+                                        <img id="avatar_img" class="img-responsive"  src="{{ url_for('static', filename='images/avatar.jpg') }}" alt="avatar" style="width: 70px;height: 70px;display: flex;border-radius: 50%;align-items: center;justify-content: center;overflow: hidden;">
+                                        <div class="overlay" id="avatar">
+                                            <h2>change</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="picture_edit" class="form-group" style="display: none;">
+{#                                    <form action="" method="post" enctype="multipart/form-data">#}
+{#                                        {{ form.csrf_token() }}#}
+{#                                        <input type="file" class="form-control-file" id="avatar_file_input" aria-describedby="fileHelp" name="photo">#}
+{#                                        <small id="fileHelp" class="form-text text-muted">支持png\jpg等图片格式</small>#}
+{#                                        <div class="btn-group" role="group" aria-label="Basic example">#}
+{#                                            <button type="submit" class="btn btn-secondary">提交</button>#}
+{#                                            <button type="button" class="btn btn-secondary" id="picture_cancel">取消</button>#}
+{#                                        </div>#}
+{#                                    </form>#}
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="table-active">
+                            <td>电子邮箱:</td>
+                            <td><span id="personalEmail"></span><span>&nbsp;&nbsp;<a  class="text-success" href="#">修改邮箱</a></span></td>
+                        </tr>
+                        <tr class="table-primary">
+                            <td>激活状态</td>
+                            <td>
+                                <span id="personalConfirm"></span><span>&nbsp;&nbsp;<a  class="text-success" href="#">重新激活</a></span>
+                            </td>
+                        </tr>
+                        <tr class="table-primary">
+                            <td>注册日期</td>
+                            <td> <span id="personalMe"></span> </td>
+                        </tr>
+                        <tr class="table-active">
+                            <td>最后登录</td>
+                            <td><span id="personalLast"></span></td>
+                        </tr>
+                        <tr class="table-primary">
+                            <td>性别</td>
+                            <td><span id="personalGen"></span><a href="#" class="text-success">&nbsp;&nbsp;编辑</a></td>
+                        </tr>
+                        <tr class="table-active">
+                            <td>删除用户</td>
+                            <td><button class="btn btn-success btn-sm">删除</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

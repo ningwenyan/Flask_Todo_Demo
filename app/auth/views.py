@@ -96,3 +96,9 @@ def auth_confirm(token):
 def auth_logout():
     logout_user()
     return redirect(url_for('main.index'))
+
+
+@auth_bp.route('/personal/')
+@login_required
+def auth_personal():
+    return render_template('auth/personal.html', current_user = current_user)

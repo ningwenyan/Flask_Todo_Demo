@@ -11,6 +11,7 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import synonym
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app
+from app.utils.timeCoversion import utc2local
 
 
 class BaseModel:
@@ -164,6 +165,20 @@ class User(db.Model, BaseModel, UserMixin):
         db.session.add(self)
         return True
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "username": self.username,
+            "email": self.email,
+            "confirmed": self.confirmed,
+            "location" : self.location,
+            "about_me" : self.about_me,
+            "member_since" : utc2local(self.member_since),
+            "last_seen" : utc2local(self.last_seen),
+            "gender" : self.gender.name,
+            "avatar" : self.avatar,
+            "birthday" : self.birthday
+        }
 
 @login_manager.user_loader
 def load_user(user_id):

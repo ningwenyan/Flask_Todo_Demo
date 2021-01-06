@@ -9,6 +9,7 @@ from .main import main_bp
 from .commons.exts import bootstrap, login_manager, db, bcrypt, csrf, mail
 from .commons import  commons_bp
 from .utils import utils_bp
+from .api.v1 import v1_bp
 
 login_manager.login_view = 'auth.auth_login'
 login_manager.login_message = '欢迎来到TodoList'
@@ -30,4 +31,6 @@ def create_app():
     app.register_blueprint(main_bp)     # 逻辑
     app.register_blueprint(commons_bp)  # 公共
     app.register_blueprint(utils_bp)    # 工具
+    app.register_blueprint(v1_bp)       # API
+
     return app

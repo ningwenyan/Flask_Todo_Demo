@@ -69,7 +69,7 @@
                         <div class="dropdown-menu dropdown-menu-right">{# 下拉菜单右对齐 #}
                             <a class="dropdown-item" href="#" id="user_detail">{{ current_user.username }}</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="">个人中心</a>
+                            <a class="dropdown-item" href="{{ url_for('auth.auth_personal') }}">个人中心</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{{ url_for('auth.auth_logout') }}">登出系统</a>
                         </div>
