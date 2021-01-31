@@ -32,3 +32,53 @@ $(function(){
         }
     })
 });
+
+$(function () {
+    $('#personalRename').click(function(e){
+        // 阻止默认新闻
+        e.preventDefault();
+        swal.fire({
+            icon: 'info',
+            title: '更改用户名',
+            confirmButtonText: '确定',
+            showCancelButton: true,
+            cancelButtonText:'取消',
+            input: 'text',
+            inputPlaceholder: '用户名',
+            allowOutsideClick: false,
+        }).then(function(result){
+            if (result.isConfirmed && result.value.length > 0){
+                const Uid = $('#showID').data('user-id');
+                const update_URL= '/api/v1/userUpdateUsername/' +  Uid  + '/' ;
+                $.getJSON(update_URL, function(rst){
+                    rst.username = result.value;
+                    rst.url = '/api/v1/userUpdateUsername/';
+                    csrfAjax.ajax({
+                        url: update_URL,
+                        type: 'POST',
+                        contentType : 'application/json',
+                        data : JSON.stringify(rst),
+                        success: function (e) {
+                            console.log(e);
+                            if (e.flag){
+                                swal.fire({
+                                    icon: 'success',
+                                    title : '添加成功'
+                                    });
+                            } else{
+                                swal.fire({
+                                    'icon': 'info',
+                                    'title': '你没有权限'
+                                })
+                            }
+
+                            setTimeout(function(){
+                                location.reload();
+                            }, 3000)
+                        }
+                    })
+                })
+            }
+        });
+    })
+});

@@ -52,6 +52,17 @@ EMAIL_REGEX = re.compile(r"^\S+@\S+\.\S+$")
 USERNAME_REGEX = re.compile(r"^\S+$")
 PHONE_REGEX = re.compile(r"1[3|4|5|7|8][0-9]{9}")
 
+# 用户角色关联表
+UserToRole = db.Table('user_role', db.Model.metadata,
+                      db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+                      db.Column('role__id', db.Integer, db.ForeignKey('sysrole.id'),primary_key=True)
+                      )
+
+# 角色资源表
+RoleToResource = db.Table('role_resource', db.metadata,
+                          db.Column('role_id', db.Integer, db.ForeignKey('sysrole.id'), primary_key=True),
+                          db.Column('resource.id', db.Integer, db.ForeignKey('sysresource.id'), primary_key=True)
+                          )
 
 class User(db.Model, BaseModel, UserMixin):
 
@@ -71,6 +82,10 @@ class User(db.Model, BaseModel, UserMixin):
     real_name = db.Column(db.String(64))  # 此字段用来验证 网络安全法案中的身份验证,因为是测试,而且要接入API,此处不做验证
     _phone = db.Column(db.String(11))
     birthday = db.Column(db.DateTime, default=None)
+
+
+    # relationship
+    roles = db.relationship('Role', secondary=UserToRole, backref=db.backref('users', lazy='dynamic'))
 
     def __init__(self, email, username, password, *args, **kwargs):
         self.email = email
@@ -177,8 +192,75 @@ class User(db.Model, BaseModel, UserMixin):
             "last_seen" : utc2local(self.last_seen),
             "gender" : self.gender.name,
             "avatar" : self.avatar,
-            "birthday" : self.birthday
+            "birthday" : self.birthday,
+            "flag" : True      # 标志位,在数据库中无设置,用于返回json数据
         }
+
+    def have_permission(self, url):
+        permissions = []
+        for role in self.roles:
+            for resource in role.resources:
+                print(resource.name)
+            permissions.extend([ resource for resource in role.resources])
+        urls = list(filter(lambda x: x.url == url, permissions))
+        if urls:
+            return True
+        else:
+            return False
+
+
+# rbac
+# 角色表
+class Role(db.Model, BaseModel):
+    __tablename__ = 'sysrole'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    create_at = db.Column(db.DateTime, default=datetime.utcnow, index=True)
+    update_at = db.Column(db.DateTime, default=datetime.utcnow, index=True)
+    name = db.Column(db.String(64))  # 超级管理员,管理员,普通会员,未激活会员
+    description = db.Column(db.String(64))
+
+    # relationship
+    resources = db.relationship('Resource', secondary=RoleToResource, backref=db.backref('roles', lazy='dynamic'))
+
+    def __init__(self, name, description, *args, **kwargs):
+        self.name = name
+        self.description = description
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'create_at': utc2local(self.create_at),
+            'update_at': utc2local(self.update_at)
+        }
+
+    def __repr__(self):
+        return "Role name:{}, description:{}".format(self.name, self.description)
+
+
+
+
+# 资源表
+class Resource(db.Model, BaseModel):
+    __tablename__ = 'sysresource'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    create_at = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    update_at = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    name = db.Column(db.String(64))
+    url = db.Column(db.String(200))
+
+    # relationship
+
+    def __init__(self, name, url, *args, **kwargs):
+        self.name = name
+        self.url = url
+
+
+
+
 
 @login_manager.user_loader
 def load_user(user_id):

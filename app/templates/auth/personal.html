@@ -9,6 +9,8 @@
     <script src="{{ url_for('static', filename='js/csrfAjax.js') }}"></script>
     <script src="{{ url_for('static', filename='js/moment/moment-with-locales.js') }}"></script>
     <script src="{{ url_for('static', filename='js/moment/moment-timezone.js') }}"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/limonte-sweetalert2/10.9.0/sweetalert2.all.js"></script>
+    <link href="https://cdn.bootcdn.net/ajax/libs/limonte-sweetalert2/10.9.0/sweetalert2.css" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
@@ -37,7 +39,7 @@
                         <tr class="table-active">
                             <td>用户名:</td>
                             <td>
-                                <span id="personalUsername"></span><span>&nbsp;&nbsp;<a  class="text-success" href="#">重命名</a></span>
+                                <span id="personalUsername"></span><span>&nbsp;&nbsp;<a  class="text-success" href="#" id="personalRename">重命名</a></span>
                             </td>
                         </tr>
                         <tr class="table-primary">

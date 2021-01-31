@@ -5,7 +5,7 @@ from flask_script import Manager
 from app.commons.exts import db
 from flask_migrate import MigrateCommand, Migrate
 from app import create_app
-from app.commons.sqlModel import User
+from app.commons.sqlModel import User, Role, UserToRole, Resource, RoleToResource
 
 app = create_app()
 
@@ -56,6 +56,55 @@ def CMS_user_delete(email):
     else:
         print('用户不存在')
 
+# 添加角色
+@manager.option('-n', '--name', dest='name')
+@manager.option('-d', '--description', dest="description")
+def cms_role_add(name, description):
+    role = Role(name, description)
+    role.save()
+    print('添加成功')
+
+# 添加用户角色
+@manager.option('-u', '--userId', dest='user_id')
+@manager.option('-r', '--roleId', dest='role_id')
+def cms_role_user_add(user_id, role_id):
+    user = User.query.get_or_404(user_id)
+    role = Role.query.get_or_404(role_id)
+    if user is not None and role is not None:
+        user.roles.append(role)
+        user.save()
+    print('添加角色用户映射')
+
+# 删除用户角色
+@manager.option('-u', '--userId', dest='user_id')
+@manager.option('-r', '--roleId', dest='role_id')
+def cms_role_user_del(user_id, role_id):
+    user = User.query.get_or_404(user_id)
+    role = Role.query.get_or_404(role_id)
+    if user is not None and role is not None:
+        user.roles.remove(role)
+        user.save()
+    print('添加角色用户映射')
+
+
+# 添加资源
+@manager.option('-n', '--name', dest='name')
+@manager.option('-u', '--url', dest='url')
+def cms_resource_add(name, url):
+    resource = Resource(name, url)
+    resource.save()
+    print('资源添加成功')
+
+# 添加资源角色表
+@manager.option('-r', '--roleId', dest='role_id')
+@manager.option('-s', '--resource', dest='resource_id')
+def cms_resource_role_add(role_id,resource_id):
+    role = Role.query.get_or_404(role_id)
+    resource = Resource.query.get_or_404(resource_id)
+    if role is not None and resource is not None:
+        role.resources = [resource]
+        role.save()
+    print('角色资源添加成功')
 
 if __name__  == '__main__':
     manager.run()
