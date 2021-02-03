@@ -1,0 +1,78 @@
+{% extends 'cms/base.html' %}
+
+{% block title %}
+    添加用户角色
+{% endblock %}
+
+{% block js %}
+    <script src="{{ url_for('static', filename='js/cms.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/csrfAjax.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/moment/moment-with-locales.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/moment/moment-timezone.js') }}"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/limonte-sweetalert2/10.9.0/sweetalert2.all.js"></script>
+    <link href="https://cdn.bootcdn.net/ajax/libs/limonte-sweetalert2/10.9.0/sweetalert2.css" rel="stylesheet">
+{% endblock %}
+
+
+{% block content %}
+    <table class="table table-hover">
+        <thead>
+            <tr>
+              <th scope="col">用户</th>
+              <th scope="col">角色</th>
+              <th scope="col">权限</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% set my_class = ['table-primary',  'table-active'] %}
+
+            {% for user in users %}
+
+                <tr class="{{ my_class | random }}">
+                    <th scope="row">{{ user.username }}</th>
+                    <td>
+                        {% for role in user.roles %}
+                            <span>{{ role.description }}&nbsp;</span>
+                        {% endfor %}
+                        <button class="btn btn-outline-success btn-sm" href=""  data-user-id="{{ user.id }}" data-toggle="modal" data-target="#EditRoleModal">编辑</button>
+                    </td>
+                    <td>
+                        <div class="list-group">
+                            {% for role in user.roles %}
+                                {% for resource in role.resources %}
+                                    <a href="#" class="list-group-item list-group-item-action">{{ resource.name }}</a>
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+      </tbody>
+    </table>
+    <div class="modal fade" id="EditRoleModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <input type="text" id="hiddenTag" style="display: none" value="">
+                    <h5 class="modal-title">角色列表</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                </div>
+                <div class="modal-body">
+                    <fieldset class="form-group" id="roleOption">
+                        <legend>选择角色</legend>
+                        <smart>注意:每次都是重新赋予角色,不是添加角色</smart>
+                        <div class="form-check">
+
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveRole">保存</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelRemind">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

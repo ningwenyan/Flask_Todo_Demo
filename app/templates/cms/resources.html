@@ -1,0 +1,108 @@
+{% extends 'cms/base.html' %}
+
+{% block title %}
+    查看并添加资源
+{% endblock %}
+
+{% block js %}
+    <script src="{{ url_for('static', filename='js/csrfAjax.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/moment/moment-with-locales.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/moment/moment-timezone.js') }}"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/limonte-sweetalert2/10.9.0/sweetalert2.all.js"></script>
+    <link href="https://cdn.bootcdn.net/ajax/libs/limonte-sweetalert2/10.9.0/sweetalert2.css" rel="stylesheet">
+{% endblock %}
+
+
+{% block content %}
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">URL</th>
+                <th scope="col">endpoint</th>
+                <th scope="col">编辑</th>
+            </tr>
+        </thead>
+        <tbody id="sOption">
+            {% set my_class = ['table-primary',  'table-active'] %}
+            {% for route in routes %}
+                <tr class="{{ my_class | random }}">
+                    <th scope="row">{{ route[0] }}</th>
+                    <td>{{ route[1] }}</td>
+                    <td>
+                        {% if route[0] in real_resources %}
+                            <button class="btn btn-outline-success btn-sm">已存在</button>
+                        {% else %}
+                            <button class="btn btn-outline-success btn-sm" data-toggle="modal"  data-target="#AddResourceModal" data-resource-name="{{ route[0] }}">编辑</button></td>
+                        {% endif %}
+            {% endfor %}
+        </tbody>
+
+    </table>
+
+    <div class="modal fade" id="AddResourceModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <input type="text" id="hiddenR" style="display: none" value="">
+                    <h5 class="modal-title">资源列表</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                </div>
+                <div class="modal-body">
+                    <fieldset>
+                        <legend>填写资源名称</legend>
+                        <div class="form-group">
+                            <label for="example"> <span id="resourceName"></span></label>
+                            <input type="text" class="form-control" id="example" aria-describedby="Help" placeholder="填写名称">
+                            <small id="Help" class="form-text text-muted">此名称为资源命名.</small>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveR">保存</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelRemind">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(function(){
+            $(':button').click(function(){
+
+               const Rname = $(this).data('resource-name');
+               console.log($(this));
+               console.log(Rname);
+               $('#hiddenR').attr('data-resource-name', Rname);
+            });
+           $('#AddResourceModal').on('show.bs.modal', function(){
+                $('#resourceName').html($('#hiddenR').data('resource-name'));
+
+           });
+           $('#saveR').click(function(){
+               const a = $('#example').val();
+               const InsertURL = '/api/v2/resourceApi/';
+               $.getJSON(InsertURL, function(rst){
+                   rst.name=$('#example').val();
+                   rst.url = $('#hiddenR').data('resource-name');
+                   csrfAjax.ajax({
+                       url : InsertURL,
+                       type : 'POST',
+                       contentType : 'application/json',
+                       data : JSON.stringify(rst),
+                        success: function(e){
+                            swal.fire({
+                                icon: 'success',
+                                title : '添加成功'
+                            });
+                            setTimeout(function(){
+                                location.reload();
+                            }, 3000)
+                        }
+               })
+               })
+
+           })
+        });
+    </script>
+{% endblock %}

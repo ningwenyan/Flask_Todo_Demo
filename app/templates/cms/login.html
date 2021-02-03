@@ -1,0 +1,49 @@
+{# 导入flush 操作#}
+{% from 'bootstrap/utils.html' import render_messages %}
+{% extends 'cms/base.html' %}
+{% from "macro/form_errors.html" import print_error %}
+
+{% block title %}
+    登录
+{% endblock %}
+
+{% block js %}
+    <script src="{{ url_for('static', filename="js/base.js") }}"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row clearfix">
+            <div class="col-md-4 column">
+            </div>
+            <div class="col-md-4 column">
+                {{ render_messages(container=False, dismissible=True, dismiss_animate=True) }}
+                <form action="" class="form-signin" method="post">
+                    {{ form.csrf_token() }}
+                    <fieldset>
+                        <div class="form-group clearfix">
+                            <label for="exampleInputEmail1">邮箱</label>
+                            <input type="email" class="form-control" name="email" aria-describedby="emailHelp" placeholder="邮箱" id="exampleInputEmail">
+                            {{ print_error(form, name="email") }}
+                            <label for="exampleInputPassword1" style="float: left;">密码</label> <label for="" style="float: right"><a href="#">忘记密码</a></label>
+                            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="密码" name="password">
+                            {{ print_error(form, name="password") }}
+
+                        </div>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="checkbox" name="confirmed">
+                                记住我
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-success btn-lg" style="margin: 10px 80px; width:50%; padding: 8px 12px">登录</button>
+                    </fieldset>
+                </form>
+                <br>
+                <small>没有账户?</small><a href="{{ url_for('auth.auth_register') }}">&nbsp;注册</a>
+            </div>
+            <div class="col-md-4 column">
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -2,6 +2,7 @@
 # coding=utf-8
 
 import os
+from flask_uploads import IMAGES
 
 # 基本配置文件
 DEBUG = True
@@ -33,3 +34,12 @@ MAIL_PASSWORD = "imkzuyoo"
 MAIL_USE_SSL = True
 MAIL_USE_TLS = False
 MAIL_DEFAULT_SENDER = '2@qq.com'
+
+# 配置json返回中文
+JSON_AS_ASCII = False
+
+# 指定文件上传
+# 配置文件上传
+Dir = os.path.dirname(os.path.abspath(__file__))
+UPLOADED_PHOTO_DEST=Dir+'/app/upload/'
+UPLOAD_PHOTO_ALLOW = IMAGES

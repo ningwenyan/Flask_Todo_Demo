@@ -9,7 +9,9 @@ v1_api = Api(v1_bp)
 
 
 from .user import UserApi, Test, User_update_username
+from .role import GetAllRoles
 
 v1_api.add_resource(UserApi, '/userApi/<int:id>/', endpoint='userApi')
 v1_api.add_resource(User_update_username, '/userUpdateUsername/<int:id>/', endpoint="userUpdateUsername")
+v1_api.add_resource(GetAllRoles, '/roleApi/', endpoint="roleApi")
 v1_api.add_resource(Test, '/test/')

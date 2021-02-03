@@ -2,14 +2,16 @@
 # coding=utf-8
 
 from . import auth_bp
-from flask import render_template, redirect, url_for, flash, request
-from .forms import AuthLoginForm, AuthRegisterForm
-from app.commons.exts import db
+from flask import render_template, redirect, url_for, flash, request, current_app
+from .forms import AuthLoginForm, AuthRegisterForm, UploadImgForm
+from app.commons.exts import db, photos
 from app.commons.sqlModel import User
 from flask_login import login_user, login_required, current_user, logout_user
 from datetime import timedelta
 from app.utils.sendMail import sendMail
 from app.utils import captcha_cache
+import os
+import shutil
 
 # 登录
 @auth_bp.route('/login/', methods=['GET', 'POST'])
@@ -98,7 +100,26 @@ def auth_logout():
     return redirect(url_for('main.index'))
 
 
-@auth_bp.route('/personal/')
+@auth_bp.route('/personal/', methods=['GET', 'POST'])
 @login_required
 def auth_personal():
-    return render_template('auth/personal.html', current_user = current_user)
+    form = UploadImgForm()
+    if form.validate_on_submit():
+        file = form.photo.data
+        app = current_app._get_current_object()
+        file_path = app.config['UPLOADED_PHOTO_DEST']
+        if not os.path.exists(file_path + current_user.username + '/avatar'):
+            os.makedirs(file_path + current_user.username + '/avatar')
+            filename = photos.save(file, folder=current_user.username)
+            current_user.avatar = photos.url(filename)
+            db.session.add(current_user)
+            db.session.commit()
+        else:
+            shutil.rmtree(file_path + current_user.username + '/avatar')
+            os.makedirs(file_path + current_user.username + '/avatar')
+            filename = photos.save(file, folder=current_user.username+'/avatar')
+            current_user.avatar = photos.url(filename)
+            db.session.add(current_user)
+            db.session.commit()
+        return redirect(url_for('auth.auth_personal'))
+    return render_template('auth/personal.html', current_user = current_user, form=form)

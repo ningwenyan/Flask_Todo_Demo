@@ -4,6 +4,87 @@
     冷冷信息页面
 {% endblock %}
 
+{% block css %}
+    <style>
+        .hovereffect {
+          width: 100%;
+          height: 100%;
+          float: left;
+          overflow: hidden;
+          position: relative;
+          text-align: center;
+          cursor: default;
+        }
+
+        .hovereffect .overlay {
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          overflow: hidden;
+          top: 0;
+          left: 0;
+        }
+
+        .hovereffect img {
+          display: block;
+          position: relative;
+          -webkit-transition: all 0.4s ease-in;
+          transition: all 0.4s ease-in;
+        }
+
+        .hovereffect:hover img {
+          filter: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg"><filter id="filter"><feColorMatrix type="matrix" color-interpolation-filters="sRGB" values="0.2126 0.7152 0.0722 0 0 0.2126 0.7152 0.0722 0 0 0.2126 0.7152 0.0722 0 0 0 0 0 1 0" /><feGaussianBlur stdDeviation="3" /></filter></svg>#filter');
+          filter: grayscale(1) blur(3px);
+          -webkit-filter: grayscale(1) blur(3px);
+          -webkit-transform: scale(1.2);
+          -ms-transform: scale(1.2);
+          transform: scale(1.2);
+        }
+
+        .hovereffect h2 {
+          text-transform: uppercase;
+          text-align: center;
+          position: relative;
+          font-size: 17px;
+          padding: 10px;
+          background: rgba(0, 0, 0, 0.6);
+        }
+
+        .hovereffect a.info {
+          display: inline-block;
+          text-decoration: none;
+          padding: 7px 14px;
+          border: 1px solid #fff;
+          margin: 50px 0 0 0;
+          background-color: transparent;
+        }
+
+        .hovereffect a.info:hover {
+          box-shadow: 0 0 5px #fff;
+        }
+
+        .hovereffect a.info, .hovereffect h2 {
+          -webkit-transform: scale(0.7);
+          -ms-transform: scale(0.7);
+          transform: scale(0.7);
+          -webkit-transition: all 0.4s ease-in;
+          transition: all 0.4s ease-in;
+          opacity: 0;
+          filter: alpha(opacity=0);
+          color: #fff;
+          text-transform: uppercase;
+        }
+
+        .hovereffect:hover a.info, .hovereffect:hover h2 {
+          opacity: 1;
+          filter: alpha(opacity=100);
+          -webkit-transform: scale(1);
+          -ms-transform: scale(1);
+          transform: scale(1);
+        }
+    </style>
+{% endblock %}
+
 {% block js %}
     <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
     <script src="{{ url_for('static', filename='js/csrfAjax.js') }}"></script>
@@ -11,6 +92,19 @@
     <script src="{{ url_for('static', filename='js/moment/moment-timezone.js') }}"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/limonte-sweetalert2/10.9.0/sweetalert2.all.js"></script>
     <link href="https://cdn.bootcdn.net/ajax/libs/limonte-sweetalert2/10.9.0/sweetalert2.css" rel="stylesheet">
+    <script>
+        $(function () {
+            $('#picture_view').click(function () {
+                $(this).attr({style:"display:none"});
+                $('#picture_edit').attr({style:'display:block'})
+            });
+            $('#picture_cancel').click(function (event) {
+                event.preventDefault();
+                $('#picture_view').attr({style:'display:block'});
+                $('#picture_edit').attr({style:'display:none'})
+            });
+        })
+    </script>
 {% endblock %}
 
 {% block content %}
@@ -54,15 +148,15 @@
                                     </div>
                                 </div>
                                 <div id="picture_edit" class="form-group" style="display: none;">
-{#                                    <form action="" method="post" enctype="multipart/form-data">#}
-{#                                        {{ form.csrf_token() }}#}
-{#                                        <input type="file" class="form-control-file" id="avatar_file_input" aria-describedby="fileHelp" name="photo">#}
-{#                                        <small id="fileHelp" class="form-text text-muted">支持png\jpg等图片格式</small>#}
-{#                                        <div class="btn-group" role="group" aria-label="Basic example">#}
-{#                                            <button type="submit" class="btn btn-secondary">提交</button>#}
-{#                                            <button type="button" class="btn btn-secondary" id="picture_cancel">取消</button>#}
-{#                                        </div>#}
-{#                                    </form>#}
+                                    <form action="" method="post" enctype="multipart/form-data">
+                                        {{ form.csrf_token() }}
+                                        <input type="file" class="form-control-file" id="avatar_file_input" aria-describedby="fileHelp" name="photo">
+                                        <small id="fileHelp" class="form-text text-muted">支持png\jpg等图片格式</small>
+                                        <div class="btn-group" role="group" aria-label="Basic example">
+                                            <button type="submit" class="btn btn-secondary">提交</button>
+                                            <button type="button" class="btn btn-secondary" id="picture_cancel">取消</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </td>
                         </tr>

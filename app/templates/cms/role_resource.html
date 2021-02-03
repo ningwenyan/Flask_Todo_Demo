@@ -1,0 +1,125 @@
+{% extends 'cms/base.html' %}
+
+{% block title %}
+    添加用户角色
+{% endblock %}
+
+{% block js %}
+    <script src="{{ url_for('static', filename='js/cms_resource.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/csrfAjax.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/moment/moment-with-locales.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/moment/moment-timezone.js') }}"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/limonte-sweetalert2/10.9.0/sweetalert2.all.js"></script>
+    <link href="https://cdn.bootcdn.net/ajax/libs/limonte-sweetalert2/10.9.0/sweetalert2.css" rel="stylesheet">
+{% endblock %}
+
+
+{% block content %}
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">角色</th>
+                <th scope="col">权限</th>
+                <th scope="col">编辑</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% set my_class = ['table-primary', 'table-active'] %}
+
+            {% for role in roles %}
+
+                <tr class="{{ my_class | random }}">
+                    <th scope="row">{{ role.description }}</th>
+
+                    <td>
+                        {% for resource in role.resources %}
+                            <div class="list-group">
+                                {% if resource != None %}
+                                    <a href="#" class="list-group-item list-group-item-action">{{ resource.name }}&nbsp;{{ resource.url }} </a>
+                                {% else %}
+                                    <a href="#" class="list-group-item list-group-item-action">无</a>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </td>
+
+                    <td>
+                        <button class="btn btn-outline-success btn-sm"   data-role-id="{{ role.id }}" data-toggle="modal" data-target="#EditResourceModal">编辑资源</button>
+                    </td>
+                </tr>
+            {% endfor %}
+      </tbody>
+
+    </table>
+
+    <table class="table table-hover">
+        <tr class="{{ my_class | random }}">
+            <th scope="row">
+                <button class="btn btn-outline-success btn-sm" id="addRole" data-toggle="modal" data-target="#addRoleModal">新建角色</button>
+            </th>
+        </tr>
+    </table>
+
+    <div class="modal fade" id="EditResourceModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <input type="text" id="hiddenResource" style="display: none" value="">
+                    <h5 class="modal-title">资源列表</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                </div>
+                <div class="modal-body">
+                    <fieldset class="form-group" id="resourceOption">
+                        <legend>添加资源</legend>
+                        <smart>注意:每次都是重新添加所有,不是添加单个</smart>
+                        <div class="form-check">
+
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveResource">保存</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelRemind">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addRoleModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <input type="text" id="hiddenResource" style="display: none" value="">
+                    <h5 class="modal-title">添加角色</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                </div>
+                <div class="modal-body">
+                    <fieldset class="form-group" id="resourceOption">
+                        <legend>添加新角色信息</legend>
+                        <form>
+                            {{ form.csrf_token() }}
+                            <fieldset>
+                                <div class="form-group">
+                                    <label for="modalRoleName">角色名称</label>
+                                    <input type="text" class="form-control" id="modalRoleName" placeholder="UserLever_3" name="roleName">
+                                </div>
+                                <div class="form-group">
+                                    <label for="modalRoleName">角色描述</label>
+                                    <input type="text" class="form-control" id="modalRoleDes" placeholder="三级会员" name="roleDes">
+                                </div>
+                            </fieldset>
+                        </form>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveRoleModal">保存</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelRemind">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

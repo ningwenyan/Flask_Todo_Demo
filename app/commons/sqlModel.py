@@ -85,7 +85,7 @@ class User(db.Model, BaseModel, UserMixin):
 
 
     # relationship
-    roles = db.relationship('Role', secondary=UserToRole, backref=db.backref('users', lazy='dynamic'))
+    roles = db.relationship('Role', secondary=UserToRole, backref=db.backref('users', lazy='dynamic'), lazy='dynamic')
 
     def __init__(self, email, username, password, *args, **kwargs):
         self.email = email
@@ -208,6 +208,20 @@ class User(db.Model, BaseModel, UserMixin):
         else:
             return False
 
+    def is_administrator(self):
+        admin =  self.roles.filter_by(name='Administrator').first()
+
+        if admin is not None:
+            return True
+        else:
+            return False
+
+    def is_superadmin(self):
+        superadmin = self.roles.filter_by(name='SuperAdmin').first()
+        if superadmin is not None:
+            return True
+        else:
+            return False
 
 # rbac
 # 角色表
@@ -259,7 +273,11 @@ class Resource(db.Model, BaseModel):
         self.url = url
 
 
-
+    def to_dict(self):
+        return {
+            'name': self.name,
+            'url': self.url
+        }
 
 
 @login_manager.user_loader
