@@ -8,6 +8,7 @@ from flask_bcrypt import Bcrypt
 from flask_wtf.csrf import CSRFProtect
 from flask_mail import Mail
 from flask_uploads import UploadSet
+from flask_cors import CORS
 
 bootstrap = Bootstrap()
 login_manager = LoginManager()
@@ -16,3 +17,4 @@ bcrypt = Bcrypt()
 csrf = CSRFProtect()
 mail = Mail()
 photos = UploadSet('PHOTO')
+cors = CORS()

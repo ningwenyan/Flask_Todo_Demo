@@ -29,7 +29,7 @@ class AuthRegisterForm(FlaskForm):
         if User.query.filter_by(email = field.data.lower()).first():
             raise ValidationError("邮箱已注册")
 
-    def validata_username(self, field):
+    def validate_username(self, field):
         """注意: _username 是类的私有属性,要在sqlModel中添加映射"""
         if User.query.filter_by(username=field.data).first():
             raise ValidationError("用户名已存在")
@@ -37,3 +37,17 @@ class AuthRegisterForm(FlaskForm):
 
 class UploadImgForm(FlaskForm):
     photo = FileField(validators=[FileAllowed(photos,message='only images'), FileRequired('no files')])
+
+
+# class ChangEmailForm(FlaskForm):
+#     email = StringField(
+#         validators=[Email(message="请输入正确的邮箱."), DataRequired(message="请输入内容."), Length(1, 64, '请输入正确长度的邮箱地址.')])
+#     password = PasswordField(
+#         validators=[Regexp(regex='^(?:(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])).{6,32}', message="密码应包含字母数字大小写,至少6位."),
+#                     Length(6, 32, "密码长于6位"), DataRequired("密码应包含字母数字大小写,至少6位.")])
+#
+#     # 自定义Field
+#     def validate_email(self, field):
+#         """将邮箱地址全部转换为小写"""
+#         if User.query.filter_by(email = field.data.lower()).first():
+#             raise ValidationError("邮箱已注册")

@@ -123,3 +123,14 @@ def auth_personal():
             db.session.commit()
         return redirect(url_for('auth.auth_personal'))
     return render_template('auth/personal.html', current_user = current_user, form=form)
+
+# 修改邮箱 token
+@auth_bp.route('/change_email/<token>')
+@login_required
+def change_email(token):
+    if current_user.check_change_email_token(token):
+        db.session.commit()
+        flash("您的邮箱已经更改.")
+    else:
+        flash("链接已过期,请从新修改.")
+    return redirect(url_for('auth.auth_login'))

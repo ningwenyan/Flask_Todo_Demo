@@ -1,0 +1,5 @@
+您好,{{ user.username }}
+点击<a href="{{ url_for('auth.change_email', token=token, _external=True) }}">修改邮箱</a>按钮修改.
+您也可以双击以下连接激活账户:
+{{ url_for('auth.change_email', token=token, _external=True) }}
+如果不修改,请忽略此邮件.

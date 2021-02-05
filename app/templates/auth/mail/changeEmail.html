@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>修改邮箱</title>
+</head>
+<body>
+    <p>您好,{{ user.username }}</p>
+    <p>点击<a href="{{ url_for('auth.change_email', token=token, _external=True) }}">修改邮箱</a>按钮修改.</p>
+    <p>您也可以双击以下连接激活账户:</p>
+    <p>{{ url_for('auth.change_email', token=token, _external=True) }}</p>
+    <p>如果不修改,请忽略此邮件.</p>
+</body>
+</html>

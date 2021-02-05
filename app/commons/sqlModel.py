@@ -180,6 +180,30 @@ class User(db.Model, BaseModel, UserMixin):
         db.session.add(self)
         return True
 
+    # -- 发送更改邮箱token
+    def generate_change_email_token(self, new_email, expiration=3600):
+        s = Serializer(current_app._get_current_object().config['SECRET_KEY'], expires_in=expiration)
+        return s.dumps({'id':self.id, 'new_email': new_email}).decode('utf-8')
+
+    def check_change_email_token(self, token):
+        s = Serializer(current_app._get_current_object().config['SECRET_KEY'])
+        try:
+            data = s.loads(token.encode('utf-8'))
+        except:
+            return False
+        new_email = data.get('new_email')
+        if data.get('id') != self.id:
+            return False
+        if new_email is None:
+            return False
+        # 判断重复
+        if self.query.filter_by(email=new_email).first() is not None:
+            return False
+        # 修改
+        self.email = new_email
+        db.session.add(self)
+        return True
+
     def to_dict(self):
         return {
             "id": self.id,

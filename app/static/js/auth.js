@@ -80,5 +80,97 @@ $(function () {
                 })
             }
         });
+    });
+
+    // 修改邮箱
+    $('#personalReEmail').click(function(e){
+        e.preventDefault();
+        swal.fire({
+            icon : 'warning',
+            title: '修改邮箱?',
+            inputLabel: '点击确定将发送一份邮件到您的新邮箱.',
+            input: 'email',
+            inputPlaceholder : '新邮箱',
+            inputAttributes: {
+                autocapitalize: 'off'
+            },
+            confirmButtonText: '确定',
+            showCancelButton: true,
+            cancelButtonText:'取消',
+            showLoaderOnConfirm: true,
+            preConfirm:  (raw_email) => {
+                showValidataflag = true; //全局变量
+                csrfAjax.ajax({
+                    async:false,
+                    url : `http://api.kwenyan.online:8080/email/${raw_email}/`,
+                    type: 'GET',
+                    contentType: 'application/json',
+                    success: function (rst) {
+                        if (rst != null){
+                            Swal.showValidationMessage('此邮箱已存在!');
+                            showValidataflag = false;
+                        }
+                    }
+                });
+                if (showValidataflag){
+                    return raw_email;
+                }else{
+                    return false;
+                }
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then(function(rst){
+            console.log(rst);
+            if (rst.isConfirmed){
+                const Uid = $('#showID').data('user-id');
+                const updateURL = '/api/v1/userUpdateEmail/' + Uid + '/';
+                $.getJSON(updateURL, function(result){
+                    result.email = rst.value;
+                    result.url = '/api/v1/userUpdateEmail/';
+                    csrfAjax.ajax({
+                        url : updateURL,
+                        type: 'POST',
+                        contentType : 'application/json',
+                        data : JSON.stringify(result),
+                        success: function(e){
+                            if (e.success){
+                                const Toast = Swal.mixin({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
+                                    didOpen: (toast) => {
+                                      toast.addEventListener('mouseenter', Swal.stopTimer);
+                                      toast.addEventListener('mouseleave', Swal.resumeTimer);
+                                    }
+                                    });
+                                    Toast.fire({
+                                      icon: 'success',
+                                      title: '发送成功,请在5分钟之内完成修改!'
+                                    })
+                            }else{
+                                const Toast = Swal.mixin({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true,
+                                    didOpen: (toast) => {
+                                      toast.addEventListener('mouseenter', Swal.stopTimer);
+                                      toast.addEventListener('mouseleave', Swal.resumeTimer);
+                                    }
+                                    });
+                                    Toast.fire({
+                                      icon: 'info',
+                                      title: '你没有权限!'
+                                    })
+                            }
+
+                        }
+                    })
+                })
+            }
+        })
     })
 });
